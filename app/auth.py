@@ -23,10 +23,9 @@ class RegisterRequest(BaseModel):
 def register(body: RegisterRequest):
     if query("SELECT user_id FROM users WHERE username=%s OR email=%s", (body.username, body.email), fetch=True):
         raise HTTPException(400, "Username or email already exists")
-    query("INSERT INTO users (username,email,phone,pan_number,password_hash,balance,risk_profile) VALUES (%s,%s,%s,%s,%s,%s,%s)",
+    uid = query("INSERT INTO users (username,email,phone,pan_number,password_hash,balance,risk_profile) VALUES (%s,%s,%s,%s,%s,%s,%s)",
           (body.username, body.email, body.phone, body.pan_number or None,
-           hash_password(body.password), body.starting_balance, body.risk_profile))
-    uid = query("SELECT LAST_INSERT_ID() AS id", fetch=True)[0]["id"]
+           hash_password(body.password), body.starting_balance, body.risk_profile), return_lastrowid=True)
     query("INSERT INTO portfolios (user_id,name,is_default,color) VALUES (%s,'My Portfolio',1,'#6366f1')", (uid,))
     return {"access_token": create_token({"sub": str(uid)}), "token_type": "bearer",
             "user_id": uid, "username": body.username}
