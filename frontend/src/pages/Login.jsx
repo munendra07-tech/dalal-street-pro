@@ -1,4 +1,4 @@
-import { useState } from "react";
+﻿import { useState } from "react";
 import { api } from "../services/api";
 
 export default function Login({ onLogin }) {
@@ -12,7 +12,7 @@ export default function Login({ onLogin }) {
     setErr(""); setLoading(true);
     try {
       const data = mode === "login" ? await api.login(f.username, f.password) : await api.register(f);
-      const me = await fetch("http://localhost:8000/auth/me", { headers: { Authorization: `Bearer ${data.access_token}` } }).then(r => r.json());
+      localStorage.setItem("token", data.access_token); const me = await api.me();
       onLogin(me, data.access_token);
     } catch(e) { setErr(e.message); }
     finally { setLoading(false); }
@@ -24,9 +24,9 @@ export default function Login({ onLogin }) {
   return (
     <div style={{minHeight:"100vh",background:"#0a0d14",display:"flex",alignItems:"center",justifyContent:"center",fontFamily:"system-ui"}}>
       <div style={{background:"#111827",border:"1px solid #1f2937",borderRadius:16,padding:36,width:360,boxShadow:"0 25px 60px rgba(0,0,0,.6)"}}>
-        <div style={{fontSize:32,marginBottom:8}}>📈</div>
+        <div style={{fontSize:32,marginBottom:8}}>ðŸ“ˆ</div>
         <div style={{fontSize:22,fontWeight:600,color:"#f9fafb",marginBottom:4}}>Dalal Street Pro</div>
-        <div style={{fontSize:13,color:"#6b7280",marginBottom:24}}>NSE · BSE · MCX · Mutual Funds · IPO</div>
+        <div style={{fontSize:13,color:"#6b7280",marginBottom:24}}>NSE Â· BSE Â· MCX Â· Mutual Funds Â· IPO</div>
         <div style={{fontSize:12,color:"#9ca3af",marginBottom:5}}>USERNAME</div>
         <input style={inp} value={f.username} onChange={set("username")} placeholder="arjun_kapoor" />
         {mode === "register" && <>
@@ -42,7 +42,7 @@ export default function Login({ onLogin }) {
           </select>
         </>}
         <div style={{fontSize:12,color:"#9ca3af",marginBottom:5}}>PASSWORD</div>
-        <input style={inp} type="password" value={f.password} onChange={set("password")} placeholder="••••••••" />
+        <input style={inp} type="password" value={f.password} onChange={set("password")} placeholder="â€¢â€¢â€¢â€¢â€¢â€¢â€¢â€¢" />
         {err && <div style={{color:"#f87171",fontSize:12,marginBottom:10}}>{err}</div>}
         <button style={btn} onClick={submit} disabled={loading}>{loading ? "Please wait..." : mode === "login" ? "Login to Portfolio" : "Create Account"}</button>
         <div style={{textAlign:"center",marginTop:12,fontSize:12,color:"#6b7280"}}>

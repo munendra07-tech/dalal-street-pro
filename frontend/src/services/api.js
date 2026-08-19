@@ -5,16 +5,15 @@ const h = () => {
 };
 const req = async (path, opts = {}) => {
   const r = await fetch(`${BASE}${path}`, { headers: h(), ...opts });
-  if (!r.ok) { const e = await r.json().catch(() => ({})); throw new Error(e.detail || r.statusText); }
   return r.json();
 };
 export const api = {
+  me: () => req("/auth/me"),
   register: d => req("/auth/register", { method: "POST", body: JSON.stringify(d) }),
   login: (u, p) => req("/auth/login", {
     method: "POST", headers: { "Content-Type": "application/x-www-form-urlencoded" },
     body: new URLSearchParams({ username: u, password: p })
   }),
-  me: () => req("/auth/me"),
   getStocks: (p = {}) => req(`/stocks/?${new URLSearchParams(p)}`),
   getStock: t => req(`/stocks/${t}`),
   screener: p => req(`/stocks/screener?${new URLSearchParams(p)}`),
