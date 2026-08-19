@@ -1,0 +1,24 @@
+fastapi==0.111.0
+uvicorn[standard]==0.29.0
+mysql-connector-python==8.3.0
+python-dotenv==1.0.1
+pydantic==2.7.1
+python-jose[cryptography]==3.3.0
+passlib[bcrypt]==1.7.4
+httpx==0.27.0
+python-multipart==0.0.9
+
+# Data / ML stack -- imported by app/ml/*, routers/live.py, routers/ai_prediction.py
+# but previously missing from this file. Versions match what's already
+# installed per your environment (section 54 of your spec).
+numpy==2.5.2
+scipy==1.18.0
+pandas==2.2.3
+scikit-learn==1.9.0
+xgboost==3.4.0
+yfinance==1.5.2
+
+# Phase 1: background sync jobs (app/scheduler.py, app/jobs/*).
+# Disabled by default (ENABLE_SCHEDULER unset) -- safe to install even
+# if you don't turn the scheduler on yet.
+apscheduler==3.10.4
